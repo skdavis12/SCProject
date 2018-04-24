@@ -1,4 +1,4 @@
-N=5; %number of nodes in x direction, same as number in y
+N=50; %number of nodes in x direction, same as number in y
 Np1=N+1;
 Nm1=N-1;
 Np2=N+2;
@@ -35,8 +35,8 @@ a=1-4*lambda;
 
 %B matrix will be used to fill in E
 B_c=Np2*3;
-B=zeros(7,B_c);
-for i=2:6
+B=zeros(Np2,B_c);
+for i=2:Np1
     B(i,i)=lambda;
     mid=i+Np1;
     B(i,mid:(mid+2))=[lambda,a,lambda];
@@ -65,13 +65,17 @@ end
 i=2;
 Uvec_Dif=1;
 Max_Uvec_Dif=1;
-while Max_Uvec_Dif>0.01 %stopping criteria
+ips=round(1/dt);
+while Max_Uvec_Dif>0.00001 %stopping criteria
     Uvec(:,:,i)=E*Uvec(:,:,i-1);
-    Uvec_Dif=Uvec(:,:,i)-Uvec(:,:,i-1);
+    if i>ips
+    Uvec_Dif=Uvec(:,:,i)-Uvec(:,:,i-ips);
     Max_Uvec_Dif=abs(max(Uvec_Dif));
+    end
     i=i+1;
 end
 
+t_final=(i-1)*dt;
 UG_final=zeros(N,Np2);
 for l=1:N
 UG_final(l,:)=Uvec(1+Np2*(l-1):l*Np2,:,i-1);
