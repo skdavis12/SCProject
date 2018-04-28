@@ -1,4 +1,4 @@
-N=50; %number of nodes in x direction, same as number in y
+N=70; %number of nodes in x direction, same as number in y
 Np1=N+1;
 Nm1=N-1;
 Np2=N+2;
@@ -57,31 +57,34 @@ for i=1:Nm2
 end
 %Note: go back and use ones() to speed up this process
 
-Uvec=zeros(35,1);
+Uvec=zeros(35,1); % edit!!
 for i=1:N
     Uvec(1+Np2*(i-1):i*Np2)=(UG(i,:));
 end
 
-i=2;
+i=1;
 Uvec_Dif=1;
 Max_Uvec_Dif=1;
 ips=round(1/dt);
 while Max_Uvec_Dif>0.00001 %stopping criteria
+    i=i+1;
     Uvec(:,:,i)=E*Uvec(:,:,i-1);
     if i>ips
-    Uvec_Dif=Uvec(:,:,i)-Uvec(:,:,i-ips);
+    Uvec_Dif=(Uvec(:,:,i)-Uvec(:,:,i-ips))./Uvec(:,:,i);
     Max_Uvec_Dif=abs(max(Uvec_Dif));
     end
-    i=i+1;
 end
 
-t_final=(i-1)*dt;
+t_final=i*dt;
 UG_final=zeros(N,Np2);
 for l=1:N
-UG_final(l,:)=Uvec(1+Np2*(l-1):l*Np2,:,i-1);
+UG_final(l,:)=Uvec(1+Np2*(l-1):l*Np2,:,i);
 end
 
+%assess stopping criteria
+%assess mesh size
+%ghost node method
 %optimize
 %vectorize loops
-%repeat for other method
+%do the other method
 %refine mesh
