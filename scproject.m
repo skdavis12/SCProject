@@ -1,4 +1,4 @@
-N=70; %number of nodes in x direction, same as number in y
+N=20; %number of nodes in x direction, same as number in y
 Np1=N+1;
 Nm1=N-1;
 Np2=N+2;
@@ -14,7 +14,7 @@ y=x;
 phi=cos(pi.*(x+pi)).*cosh(pi-x); %BC at y=by
 psi=(x+pi).^2.*sin(pi.*(x+pi)/(4*pi)); %BC at y=ay
 
-UG=zeros(5,Np2,1); %preallocate
+UG=zeros(N,Np2,1); %preallocate
 
 UG(1,2:Np1,1)=phi;
 UG(N,2:Np1,1)=psi;
@@ -51,13 +51,13 @@ for i=1:Nm2
 end
 for i=1:Nm2
     ii=i*Np2+1;
-    E(ii,ii)=1;
+    E(ii,ii+1)=1;
     ik=ii+Np1;
-    E(ik,ik)=1;
+    E(ik,ik-1)=1;
 end
 %Note: go back and use ones() to speed up this process
 
-Uvec=zeros(35,1); % edit!!
+Uvec=zeros((N*Np2),1); % edit!!
 for i=1:N
     Uvec(1+Np2*(i-1):i*Np2)=(UG(i,:));
 end
@@ -80,7 +80,7 @@ UG_final=zeros(N,Np2);
 for l=1:N
 UG_final(l,:)=Uvec(1+Np2*(l-1):l*Np2,:,i);
 end
-
+U_final=UG_final(:,2:Np1);
 %assess stopping criteria
 %assess mesh size
 %ghost node method
