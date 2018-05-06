@@ -4,8 +4,8 @@ Nm1=N-1;
 Np2=N+2;
 Nm2=N-2;
 h=2*pi/(Nm1); %delta x, delta y
-dt=h^2/9; %delta t note: makes explicit sequence converge faster??
-%is deltat the right size for convergence with implicit?
+dt=h^2/9; %no value that will spped up convergence
+%is deltat the right size for stability?
 
 x=-pi:h:pi; %there's a better way to do this
 y=x;
@@ -69,12 +69,12 @@ while Max_Uvec_Dif>0.00001 %stopping criteria
     end
 end
 
-t_final=i*dt;
-UG_final=zeros(N,Np2);
+t_i_final=i*dt;
+UG_i_final=zeros(N,Np2);
 for l=1:N
-UG_final(l,:)=Uvec(1+Np2*(l-1):l*Np2,:,i);
+UG_i_final(l,:)=Uvec(1+Np2*(l-1):l*Np2,:,i);
 end
-U_final=UG_final(:,2:Np1);
+U_i_final=UG_i_final(:,2:Np1);
 %assess stopping criteria
 %assess mesh size
 %ghost node method
