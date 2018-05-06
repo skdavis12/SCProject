@@ -1,11 +1,10 @@
-N=20; %number of nodes in x direction, same as number in y
+N=5; %number of nodes in x direction, same as number in y
 Np1=N+1;
 Nm1=N-1;
 Np2=N+2;
 Nm2=N-2;
-h=2*pi/(Nm1); %delta x, delta y
-dt=h^2/4; %delta t note: makes sequence converge faster??
-
+h=2*pi/(Nm1); %h = delta x = delta y
+dt=h^2/6; %note: makes sequence converge faster
 x=-pi:h:pi; %there's a better way to do this
 y=x;
 
@@ -14,6 +13,7 @@ y=x;
 phi=cos(pi.*(x+pi)).*cosh(pi-x); %BC at y=by
 psi=(x+pi).^2.*sin(pi.*(x+pi)/(4*pi)); %BC at y=ay
 
+%UG: U(y,x,t) including ghost nodes
 UG=zeros(N,Np2,1); %preallocate
 
 UG(1,2:Np1,1)=phi;
@@ -23,6 +23,7 @@ UG(N,2:Np1,1)=psi;
 E_size=Np2*N;
 E=zeros(E_size, E_size);
 
+%BCs for phi and psi
 for i=2:Np1
     m=i+Np2*Nm1;
     E(i,i)=1;
@@ -49,19 +50,24 @@ for i=1:Nm2
     ec=er-Np2;
     E(er:er+Np1,ec:ec+3*Np2-1)=B; %ERROR WHEN CHANGING N to something other than 5 !!! FIX!!!!
 end
+
+%ghost nodes
 for i=1:Nm2
     ii=i*Np2+1;
     E(ii,ii+1)=1;
     ik=ii+Np1;
     E(ik,ik-1)=1;
 end
-%Note: go back and use ones() to speed up this process
 
-Uvec=zeros((N*Np2),1); % edit!!
+%Note: go back and use ones() to speed up this process?
+
+%Uvec is UG in vector form, check indexing (column major?)
+Uvec=zeros((N*Np2),1); 
 for i=1:N
     Uvec(1+Np2*(i-1):i*Np2)=(UG(i,:));
 end
 
+%running the code to steady state
 i=1;
 Uvec_Dif=1;
 Max_Uvec_Dif=1;
@@ -75,12 +81,14 @@ while Max_Uvec_Dif>0.00001 %stopping criteria
     end
 end
 
+%final values for code output
 t_final=i*dt;
 UG_final=zeros(N,Np2);
 for l=1:N
 UG_final(l,:)=Uvec(1+Np2*(l-1):l*Np2,:,i);
 end
 U_final=UG_final(:,2:Np1);
+
 %assess stopping criteria
 %assess mesh size
 %ghost node method
