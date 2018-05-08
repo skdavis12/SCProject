@@ -74,7 +74,7 @@ function [U,Uexact,x,y,h,dt]=explicit_ms(N,dt,tf)
                 BCvec(k)=BCvec(k)+A(ii+2);
                 BCvec(j)=BCvec(j)+A(ii+2);
             end
-        %Update F
+        %Update F and Fvec
             F=(-exp(-(t-dt)/2)/2)*(sin(X)+sin(Y))+exp(-(t-dt)/2)*sin(X)+exp(-(t-dt)/2)*sin(Y);
             for ii=1:Nm2
                 Fvec((ii-1)*Nm2+1:ii*Nm2)=F(ii+1,2:Nm1); %vector of interior nodes of F
