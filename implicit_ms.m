@@ -54,20 +54,20 @@ function [U,Uexact,x,y,h,dt]=implicit_ms(N,dt,tf)
                 I(k+1,k)=-lambda;
             end
         end
-        B=eye(isize-Nm2,isize-Nm2)*-lambda;
-        I(1:isize-Nm2,Nm2+1:isize)=I(1:isize-Nm2,Nm2+1:isize)+B;
-        I(Nm2+1:isize,1:isize-Nm2)=I(Nm2+1:isize,1:isize-Nm2)+B;
+        B=eye(intn-Nm2,intn-Nm2)*-lambda;
+        I(1:intn-Nm2,Nm2+1:intn)=I(1:intn-Nm2,Nm2+1:intn)+B;
+        I(Nm2+1:intn,1:intn-Nm2)=I(Nm2+1:intn,1:intn-Nm2)+B;
 
         
 %Iterative implicit method until tf is reached    
-    Fvec=zeros(isize,1); %preallocate
+    Fvec=zeros(intn,1); %preallocate
     i=1;
     for t=dt:dt:tf
         %Create BCvec
             A=exp(-(t-dt)/2)*(sin(x)+sin(-pi)); %values at boundary, same for all 4 boundaries
-            BCvec=zeros(isize,1);
+            BCvec=zeros(intn,1);
             BCvec(1:Nm2)=A(2:Nm1);
-            BCvec(isize-(N-3):isize)=A(2:Nm1);
+            BCvec(intn-(N-3):intn)=A(2:Nm1);
             for ii=0:N-3
                 k=ii*(Nm2)+1;
                 j=Nm2*(ii+1);

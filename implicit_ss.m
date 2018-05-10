@@ -1,13 +1,14 @@
 function [U,x,y,t,h,dt]=implicit_ss(N,dt)
-% This function uses the implicit method to estimate U(x,y,tf)
+% This function uses the implicit method to estimate U(x,y,t) at steady
+% state
 % Given the inputs:
 %     N ~ number of nodes in x and y
 %     dt ~ time step
-%     tf ~ time at which U must be approximated
 % The function will return:
-%     U ~ U(x,y,tf) approximated by model
+%     U ~ U(x,y,t) approximated by model at steady state
 %     x ~ vector of discretized x
 %     y ~ vector of discretized y
+%     t ~ time at which steady state was reached
 %     h ~ dx = dy
 %     dt
 % Where:
@@ -68,13 +69,13 @@ function [U,x,y,t,h,dt]=implicit_ss(N,dt)
     [~,Usvec]=steadystate(N);
     MaxDif=1;
     t=0;
-    while MaxDif>0.01
+    while MaxDif>0.001
         t=t+dt;
         i=i+1;
         %Update Uvec
             Uvec(:,:,i)=I\(Uvec(:,:,i-1)+lambda*BCvec);
         %Caculate Difference from Steady State
-            Dif=abs((Uvec(:,:,i)-Usvec)./Usvec);
+            Dif=abs(Uvec(:,:,i)-Usvec);
             MaxDif=max(Dif);
     end
 

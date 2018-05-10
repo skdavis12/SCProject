@@ -23,7 +23,6 @@ function [U,x,y,h,dt]=implicit(N,dt,tf)
     h=2*pi/(Nm1); %h=dx=dy 
     x=-pi:h:pi;
     y=x;
-    [X,Y]=meshgrid(x,y);
 
     
 %Initial Condition of Interior Nodes:
